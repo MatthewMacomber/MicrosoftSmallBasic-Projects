@@ -1,0 +1,67 @@
+' Routine to make Small Basic shapes drag and dropable via mouse.
+
+' Mouse Based Event routines, generic include for mouse functionality.
+
+GraphicsWindow.MouseDown = OnMouseDown
+GraphicsWindow.MouseUp = OnMouseUp
+GraphicsWindow.MouseMove = OnMouseMove
+
+Sub OnMouseDown
+  ButtonMouseDown()
+  DandDMouseDown()
+EndSub
+
+Sub OnMouseUp
+  ButtonMouseUp()
+  DandDMouseUp()
+EndSub
+
+Sub OnMouseMove
+  DandDMouseMove()
+EndSub
+
+'--------------------
+
+' Drag and Drop Shapes routine.
+
+theShapes[1][1] = Shapes.AddRectangle(50, 50)
+theShapes[1][2] = 1 ' Is this shape moveable? 1 = yes, 0 = no.
+theShapes[1][3] = 50 ' Shapes top left corner X cordinate
+theShapes[1][4] = 50 ' Shapes top left corner Y cordinate
+theShapes[1][5] = theShapes[1][3] + theShapes[1][3] ' Shapes bottom right corner X cordinate
+theShapes[1][6] = theShapes[1][4] + theShapes[1][4] ' Shapes bottom right corner Y cordinate
+' Shapes size will also have its own variable if needed.
+
+Shapes.Move(theShapes[1][1], 50, 50)
+
+Sub DandDMouseDown ' Add to OnMouseDown
+  MouseX = GraphicsWindow.MouseX
+  MouseY = GraphicsWindow.MouseY
+  For i = 1 To Array.GetItemCount(theShapes)
+    If theShapes[i][2] <> 0 And MouseX > theShapes[i][3] And MouseY > theShapes[i][4] And MouseX < theShapes[i][5] And MouseY < theShapes[i][6] Then
+      movingShape = theShapes[i][1]
+      dragging = i
+    EndIf
+  EndFor
+EndSub
+
+Sub DandDMouseUp ' Add to OnMouseUp
+  If dragging <> 0 Then
+    movingShape = ""
+    MouseX = GraphicsWindow.MouseX
+    MouseY = GraphicsWindow.MouseY
+    theShapes[dragging][3] = MouseX ' Shapes top left corner X cordinate
+    theShapes[dragging][4] = MouseY ' Shapes top left corner Y cordinate
+    theShapes[dragging][5] = MouseX + theShapes[1][3] ' Shapes bottom right corner X cordinate
+    theShapes[dragging][6] = MouseY + theShapes[1][4] ' Shapes bottom right corner Y cordinate
+    dragging = 0
+  EndIf
+EndSub
+
+Sub DandDMouseMove ' Add to OnMouseMove
+  If dragging <> 0 Then
+    MouseX = GraphicsWindow.MouseX
+    MouseY = GraphicsWindow.MouseY
+    Shapes.Move(movingShape, MouseX, MouseY)
+  EndIf
+EndSub

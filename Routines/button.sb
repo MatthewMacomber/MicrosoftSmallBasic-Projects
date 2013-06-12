@@ -1,0 +1,80 @@
+' Simple clickable button creation routine, supports multiple buttons.
+
+' Mouse Based Event routines, generic include for mouse functionality.
+
+GraphicsWindow.MouseDown = OnMouseDown
+GraphicsWindow.MouseUp = OnMouseUp
+GraphicsWindow.MouseMove = OnMouseMove
+
+Sub OnMouseDown
+  ButtonMouseDown()
+  DandDMouseDown()
+EndSub
+
+Sub OnMouseUp
+  ButtonMouseUp()
+  DandDMouseUp()
+EndSub
+
+Sub OnMouseMove
+  DandDMouseMove()
+EndSub
+
+'--------------------
+
+' Basic Buttons Creation Routine
+buttons[1][1] = "Button" ' Button Text
+buttons[1][2] = 65 ' X Variable
+buttons[1][3] = 87.5 ' Y Variable
+buttons[1][4] = 70 ' Width Variable
+buttons[1][5] = 25 ' Hight Variable
+buttons[1][6] = "DimGray" ' Button Up Color
+buttons[1][7] = "Gainsboro" ' Button Down Color
+buttons[1][8] = "Black" ' Text Color
+buttons[1][9] = 0 ' Is button clicked on
+buttons[1][10] = buttons[1][2] + buttons[1][4]
+buttons[1][11] = buttons[1][3] + buttons[1][5]
+buttons[1][12] = (buttons[1][2] + (buttons[1][4] / 2)) - (Text.GetLength(buttons[1][1]) * 3.25)
+buttons[1][13] = (buttons[1][3] + (buttons[1][5] / 2)) - 7
+
+' Required to use subs that activate on Mouse Clicks.
+GraphicsWindow.MouseDown = OnMouseDown
+GraphicsWindow.MouseUp = OnMouseUp
+
+' This sub is used to initialize all the buttons. Add to program or scene startup.
+Sub InitButtons
+  For i = 1 To Array.GetItemCount(buttons)
+    GraphicsWindow.BrushColor = buttons[i][6]
+    GraphicsWindow.FillRectangle(buttons[i][2], buttons[i][3], buttons[i][4], buttons[i][5])
+    GraphicsWindow.BrushColor = buttons[i][8]
+    GraphicsWindow.DrawText(buttons[i][12], buttons[i][13], buttons[i][1])
+  EndFor
+EndSub
+
+Sub ButtonMouseDown 'Add to OnMouseDown
+  MouseX = GraphicsWindow.MouseX ' Standard "global" variables for use with all subs
+  MouseY = GraphicsWindow.MouseY
+  ' To be combined with other OnMouseDown events
+  For i = 1 To Array.GetItemCount(buttons)
+    If (MouseX > buttons[i][2] And MouseX < buttons[i][10] And MouseY > buttons[i][3] And MouseY < buttons[i][11]) Then
+      GraphicsWindow.BrushColor = buttons[i][7]
+      GraphicsWindow.FillRectangle(buttons[i][2], buttons[i][3], buttons[i][4], buttons[i][5])
+      GraphicsWindow.BrushColor = buttons[i][8]
+      GraphicsWindow.DrawText(buttons[i][12], buttons[i][13], buttons[i][1])
+      buttons[i][9] = 1
+    EndIf
+  EndFor
+EndSub
+
+Sub ButtonMouseUp ' Add to OnMouseUp
+  ' To be included with other OnMouseUp events
+  For i = 1 To Array.GetItemCount(buttons)
+    If buttons[i][9] = 1 Then
+      GraphicsWindow.BrushColor = buttons[i][6]
+      GraphicsWindow.FillRectangle(buttons[i][2], buttons[i][3], buttons[i][4], buttons[i][5])
+      GraphicsWindow.BrushColor = buttons[i][8]
+      GraphicsWindow.DrawText(buttons[1][12], buttons[1][13], buttons[i][1])
+      buttons[i][9] = 0
+    EndIf
+  EndFor
+EndSub

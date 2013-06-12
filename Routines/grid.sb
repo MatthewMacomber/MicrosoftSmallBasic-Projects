@@ -1,0 +1,36 @@
+' Simple routine to create a visible grid.
+
+' Mouse Based Event routines, generic include for mouse functionality.
+
+GraphicsWindow.MouseDown = OnMouseDown
+GraphicsWindow.MouseUp = OnMouseUp
+GraphicsWindow.MouseMove = OnMouseMove
+
+Sub OnMouseDown
+  ButtonMouseDown()
+  DandDMouseDown()
+EndSub
+
+Sub OnMouseUp
+  ButtonMouseUp()
+  DandDMouseUp()
+EndSub
+
+Sub OnMouseMove
+  DandDMouseMove()
+EndSub
+
+'--------------------
+
+' Box Grid Creator Routine
+gridX = 18
+gridY = 18
+boardSizeX = 9
+boardSizeY = 9
+squareSize = 40
+For y = 1 To boardSizeY
+  For x = 1 To boardSizeX
+    boxes[y][x] = Shapes.AddRectangle(squareSize, squareSize)
+    Shapes.Move(boxes[y][x], gridX + (x * squareSize), gridY + (y * squareSize))
+  EndFor
+EndFor

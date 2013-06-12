@@ -1,0 +1,64 @@
+' 
+
+' Mouse Based Event routines, generic include for mouse functionality.
+
+GraphicsWindow.MouseDown = OnMouseDown
+GraphicsWindow.MouseUp = OnMouseUp
+GraphicsWindow.MouseMove = OnMouseMove
+
+Sub OnMouseDown
+  ButtonMouseDown()
+  DandDMouseDown()
+EndSub
+
+Sub OnMouseUp
+  ButtonMouseUp()
+  DandDMouseUp()
+EndSub
+
+Sub OnMouseMove
+  DandDMouseMove()
+EndSub
+
+'--------------------
+
+' Shapes Align to Grid routine.
+' Requires Drag And Drop routine for now.
+theGrid[1][1] = "Example Grid" ' The name/label of the grid in question
+theGrid[1][2] = 9 ' Number of horizontal/X grid points
+theGrid[1][3] = 9 ' Number of vertical/Y grid points
+theGrid[1][4] = 50 ' Spacing between points on the X axis
+theGrid[1][5] = 50 ' Spacing between points on the Y axis
+' X and Y Location of Grid is Not Currently Implemented
+theGrid[1][6] = 18 ' X Location of the grid
+theGrid[1][7] = 18 ' Y Location of the grid
+
+theShapes[1][7] = 1 ' Align to Grid. 1 = yes, 0 = no
+
+Sub GridAlign ' Add sub to the OnMouseUp routine
+  If dragging <> 0 And theShapes[dragging][7] <> 0 Then
+    'Code for aligning shapes to grid for mouseup event.
+    MouseX = GraphicsWindow.MouseX
+    MouseY = GraphicsWindow.MouseY
+    xgrid = Math.Floor(MouseX / theGrid[1][4]) * theGrid[1][4]
+    ygrid = Math.Floor(MouseY / theGrid[1][5]) * theGrid[1][5]
+    If xgrid < theGrid[1][4] Then
+      xgrid = theGrid[1][4]
+    ElseIf xgrid > theGrid[1][4] * theGrid[1][2] Then
+      xgrid = theGrid[1][4] * theGrid[1][2]
+    EndIf
+    If ygrid < theGrid[1][5] Then
+      ygrid = theGrid[1][5]
+    ElseIf ygrid > theGrid[1][5] * theGrid[1][3] Then
+      ygrid = theGrid[1][5] * theGrid[1][3]
+    EndIf 
+    TextWindow.WriteLine(xgrid)
+    theShapes[dragging][3] = xgrid ' Shapes top left corner X cordinate
+    theShapes[dragging][4] = ygrid ' Shapes top left corner Y cordinate
+    theShapes[dragging][5] = xgrid + theGrid[1][4] ' Shapes bottom right corner X cordinate
+    theShapes[dragging][6] = ygrid + theGrid[1][5] ' Shapes bottom right corner Y cordinate
+    Shapes.Move(movingShape, xgrid, ygrid)
+    movingShape = ""
+    dragging = 0
+  EndIf
+EndSub
