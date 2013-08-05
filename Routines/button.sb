@@ -73,7 +73,7 @@ Sub ButtonMouseUp ' Add to OnMouseUp
       GraphicsWindow.BrushColor = buttons[i][6]
       GraphicsWindow.FillRectangle(buttons[i][2], buttons[i][3], buttons[i][4], buttons[i][5])
       GraphicsWindow.BrushColor = buttons[i][8]
-      GraphicsWindow.DrawText(buttons[1][12], buttons[1][13], buttons[i][1])
+      GraphicsWindow.DrawText(buttons[i][12], buttons[i][13], buttons[i][1])
       buttons[i][9] = 0
     EndIf
   EndFor
